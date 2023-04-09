@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -39,10 +40,13 @@ android {
 }
 
 dependencies {
+    def nav_version = "2.5.3"
+    def room_version = "2.5.1"
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
-    def nav_version = "2.5.3"
+
 
     //Navigation Component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -50,6 +54,11 @@ dependencies {
 
     //Gson
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    //Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

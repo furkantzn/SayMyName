@@ -14,7 +14,9 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.motion.utils.ViewState
+import androidx.lifecycle.viewModelScope
 import com.example.saymyname.databinding.FragmentMainBinding
+import kotlinx.coroutines.launch
 import java.util.ResourceBundle
 
 class MainFragment : Fragment() {
@@ -39,7 +41,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        this.context?.let { viewModel.loadJson(it) }
+        this.context?.let {
+            viewModel.loadJson(it)
+            viewModel.viewModelScope.launch { viewModel.createDB(it.applicationContext) }
+        }
 
         binding.btnStart.setOnClickListener {
             if(binding.btnStart.text.equals("Start")){
@@ -50,6 +55,20 @@ class MainFragment : Fragment() {
                 Log.e("MainFragment","Btn name could not find!")
             }
         }
+
+        binding.btnLearned.setOnClickListener {
+            val word = binding.tvWord.text.toString()
+            if(word.isNotEmpty()){
+                viewModel.saveLearnedWord(word)
+            }
+        }
+
+        binding.btnLearnLater.setOnClickListener {
+            val word = binding.tvWord.text.toString()
+            if(word.isNotEmpty()){
+                viewModel.saveLearnLaterWord(word)
+            }
+        }
     }
 
     private fun startChallenge(){
@@ -57,7 +76,9 @@ class MainFragment : Fragment() {
 
         runnable = object : Runnable {
             override fun run(){
-                binding.tvWord.text = viewModel.getWord()
+                viewModel.viewModelScope.launch {
+                        binding.tvWord.text = viewModel.getWord()
+                }
                 runAnimation()
                 handler.postDelayed(this, 3000)
             }
