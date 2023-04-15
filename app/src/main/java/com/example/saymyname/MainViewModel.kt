@@ -38,17 +38,6 @@ class MainViewModel : ViewModel() {
         return learnedWords
     }
 
-    private suspend fun getLaterLearnWords():List<String>{
-        var laterLearnWords = mutableListOf<String>()
-        for (word in wordDao.getLaterLearnWords()){
-            val isSuccess = word.name?.let { laterLearnWords.add(it) }
-            if(isSuccess == false){
-                word.name.let { laterLearnWords.add(it) }
-            }
-        }
-        return laterLearnWords
-    }
-
     fun loadJson(context: Context) {
         val gson = GsonBuilder().create()
         lateinit var jsonString: String
@@ -75,11 +64,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun createDB(context: Context){
-        database = Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,"saymyname-database"
-        ).build()
-
-        wordDao = database.wordDao()
+        DatabaseManager.createDB(context)
+        wordDao = DatabaseManager.getWordDao()
     }
 }

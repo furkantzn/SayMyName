@@ -15,20 +15,17 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.motion.utils.ViewState
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.findNavController
 import com.example.saymyname.databinding.FragmentMainBinding
 import kotlinx.coroutines.launch
 import java.util.ResourceBundle
 
 class MainFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: FragmentMainBinding
     private lateinit var runnable: Runnable
     private lateinit var handler: Handler
+    private var isChallengeStart = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,12 +44,10 @@ class MainFragment : Fragment() {
         }
 
         binding.btnStart.setOnClickListener {
-            if(binding.btnStart.text.equals("Start")){
+            if(!isChallengeStart){
                 startChallenge()
-            }else if (binding.btnStart.text.equals("Stop")){
-                stopChallenge()
             }else{
-                Log.e("MainFragment","Btn name could not find!")
+                stopChallenge()
             }
         }
 
@@ -69,9 +64,15 @@ class MainFragment : Fragment() {
                 viewModel.saveLearnLaterWord(word)
             }
         }
+
+        binding.btnShowResults.setOnClickListener {
+            val action = MainFragmentDirections.actionMainFragmentToResultsFragment()
+            view.findNavController().navigate(action)
+        }
     }
 
     private fun startChallenge(){
+        isChallengeStart = true
         handler = Handler(Looper.getMainLooper())
 
         runnable = object : Runnable {
@@ -80,27 +81,30 @@ class MainFragment : Fragment() {
                         binding.tvWord.text = viewModel.getWord()
                 }
                 runAnimation()
-                handler.postDelayed(this, 3000)
+                handler.postDelayed(this, 4000)
             }
         }
 
         handler.post(runnable)
-        binding.btnStart.text = "Stop"
+        binding.btnStart.text = getString(R.string.stop)
         binding.btnLearnLater.visibility = View.VISIBLE
         binding.btnLearned.visibility = View.VISIBLE
+        binding.btnShowResults.visibility = View.INVISIBLE
     }
 
     private fun stopChallenge(){
+        isChallengeStart=false
         handler.removeCallbacks(runnable)
-        binding.btnStart.text = "Start"
+        binding.btnStart.text = getString(R.string.start)
         binding.btnLearnLater.visibility = View.INVISIBLE
         binding.btnLearned.visibility = View.INVISIBLE
+        binding.btnShowResults.visibility = View.VISIBLE
         binding.tvWord.text = context?.getString(R.string.wordsText)
     }
 
     private fun runAnimation(){
         val anim = AnimationUtils.loadAnimation(this.context, R.anim.anim_textview)
-        anim.duration = 3000
+        anim.duration = 2000
         binding.tvWord.clearAnimation()
         binding.tvWord.startAnimation(anim)
     }

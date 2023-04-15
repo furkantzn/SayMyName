@@ -10,13 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/percentsixtycolor">
+        <Button
+            android:id="@+id/btnShowResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/btnShowResults"
+            android:background="@drawable/custom_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvWord"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="64dp"
             android:layout_marginEnd="16dp"
             android:text="@string/wordsText"
             android:textAlignment="center"
@@ -25,7 +36,7 @@
             app:layout_constraintBottom_toTopOf="@+id/btnLearnLater"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/btnShowResults" />
 
         <Button
             android:id="@+id/btnStart"

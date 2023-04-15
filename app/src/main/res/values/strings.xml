@@ -2,4 +2,11 @@
     <string name="app_name">SayMyName</string>
     <string name="wordsText">If you are ready press Start!</string>
     <string name="buttonStart">Start</string>
+    <string name="btnShowResults">Results</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="learn_later">Learn Later</string>
+    <string name="learned">Learned</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
 </resources>
