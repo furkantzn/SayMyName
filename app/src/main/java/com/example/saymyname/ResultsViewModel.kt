@@ -8,11 +8,15 @@ import com.example.saymyname.model.WordDao
 class ResultsViewModel:ViewModel() {
     private var wordDao : WordDao = DatabaseManager.getWordDao()
 
-    public suspend fun getLearnedWords():List<Word>{
+    suspend fun getLearnedWords():MutableList<Word>{
         return wordDao.getLearnedWords()
     }
 
-    public suspend fun getLaterLearnWords():List<Word>{
+    suspend fun getLaterLearnWords():MutableList<Word>{
         return wordDao.getLaterLearnWords()
+    }
+
+    suspend fun deleteWord(word: Word){
+        wordDao.deleteWord(word)
     }
 }

@@ -15,8 +15,7 @@ import java.io.IOException
 import java.util.UUID
 
 class MainViewModel : ViewModel() {
-    private lateinit var words :List<String>
-    private lateinit var database: AppDatabase
+    private lateinit var words :MutableList<String>
     private lateinit var wordDao : WordDao
 
     suspend fun getWord() :String{
@@ -27,7 +26,7 @@ class MainViewModel : ViewModel() {
         return words[randomNumber]
     }
 
-    private suspend fun getLearnedWords():List<String>{
+    private suspend fun getLearnedWords():MutableList<String>{
         var learnedWords = mutableListOf<String>()
         for (word in wordDao.getLearnedWords()){
             val isSuccess = word.name?.let { learnedWords.add(it) }
@@ -63,7 +62,7 @@ class MainViewModel : ViewModel() {
         wordDao.addWord(wordObj)
     }
 
-    fun createDB(context: Context){
+    suspend fun createDB(context: Context){
         DatabaseManager.createDB(context)
         wordDao = DatabaseManager.getWordDao()
     }

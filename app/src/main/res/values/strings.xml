@@ -9,4 +9,6 @@
     <string name="learned">Learned</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
+    <string name="btnYes">Yes</string>
+    <string name="btnNo">No</string>
 </resources>

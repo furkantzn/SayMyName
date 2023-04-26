@@ -1,24 +1,24 @@
 package com.example.saymyname.model
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface WordDao {
     @Query("SELECT * FROM word")
-    suspend fun getAll(): List<Word>
+    suspend fun getAll(): MutableList<Word>
 
     @Query("SELECT * FROM word WHERE learn_status = true")
-    suspend fun getLearnedWords() : List<Word>
+    suspend fun getLearnedWords() : MutableList<Word>
 
     @Query("SELECT * FROM word WHERE learn_status = false")
-    suspend fun getLaterLearnWords() : List<Word>
+    suspend fun getLaterLearnWords() : MutableList<Word>
 
     @Update
     suspend fun updateWord(word: Word)
 
     @Insert
     suspend fun addWord(word: Word)
+
+    @Delete
+    suspend fun deleteWord(word: Word)
 }

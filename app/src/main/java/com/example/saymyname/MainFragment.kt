@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import com.example.saymyname.databinding.FragmentMainBinding
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.ResourceBundle
 
 class MainFragment : Fragment() {
@@ -37,12 +38,25 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setViewModel()
+        loadJsonData()
+        setViewElements(view)
+    }
+
+    private fun setViewModel(){
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+    }
+
+    private fun loadJsonData(){
         this.context?.let {
             viewModel.loadJson(it)
-            viewModel.viewModelScope.launch { viewModel.createDB(it.applicationContext) }
+            runBlocking {
+                viewModel.createDB(it.applicationContext)
+            }
         }
+    }
 
+    private fun setViewElements(view:View){
         binding.btnStart.setOnClickListener {
             if(!isChallengeStart){
                 startChallenge()
@@ -60,7 +74,7 @@ class MainFragment : Fragment() {
 
         binding.btnLearnLater.setOnClickListener {
             val word = binding.tvWord.text.toString()
-            if(word.isNotEmpty()){
+            if (word.isNotEmpty()) {
                 viewModel.saveLearnLaterWord(word)
             }
         }
@@ -77,8 +91,8 @@ class MainFragment : Fragment() {
 
         runnable = object : Runnable {
             override fun run(){
-                viewModel.viewModelScope.launch {
-                        binding.tvWord.text = viewModel.getWord()
+                runBlocking {
+                    binding.tvWord.text = viewModel.getWord()
                 }
                 runAnimation()
                 handler.postDelayed(this, 4000)
