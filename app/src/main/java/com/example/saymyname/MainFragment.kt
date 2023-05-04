@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.opengl.Visibility
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -88,6 +89,11 @@ class MainFragment : Fragment() {
     private fun startChallenge(){
         isChallengeStart = true
         handler = Handler(Looper.getMainLooper())
+        binding.progressWordCountDown.visibility = View.VISIBLE
+        binding.btnStart.text = getString(R.string.stop)
+        binding.btnLearnLater.visibility = View.VISIBLE
+        binding.btnLearned.visibility = View.VISIBLE
+        binding.btnShowResults.visibility = View.INVISIBLE
 
         runnable = object : Runnable {
             override fun run(){
@@ -95,17 +101,24 @@ class MainFragment : Fragment() {
                     binding.tvWord.text = viewModel.getWord()
                 }
                 runAnimation()
+                startCountDown()
                 handler.postDelayed(this, 4000)
             }
         }
-
         handler.post(runnable)
-        binding.btnStart.text = getString(R.string.stop)
-        binding.btnLearnLater.visibility = View.VISIBLE
-        binding.btnLearned.visibility = View.VISIBLE
-        binding.btnShowResults.visibility = View.INVISIBLE
     }
+    private fun startCountDown(){
+        val timer = object: CountDownTimer(4000, 1) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.progressWordCountDown.progress = (millisUntilFinished).toInt()
+            }
 
+            override fun onFinish() {
+                binding.progressWordCountDown.progress = 0
+            }
+        }
+        timer.start()
+    }
     private fun stopChallenge(){
         isChallengeStart=false
         handler.removeCallbacks(runnable)
@@ -114,6 +127,7 @@ class MainFragment : Fragment() {
         binding.btnLearned.visibility = View.INVISIBLE
         binding.btnShowResults.visibility = View.VISIBLE
         binding.tvWord.text = context?.getString(R.string.wordsText)
+        binding.progressWordCountDown.visibility = View.INVISIBLE
     }
 
     private fun runAnimation(){
