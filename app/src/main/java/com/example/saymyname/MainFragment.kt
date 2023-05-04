@@ -27,6 +27,7 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var runnable: Runnable
     private lateinit var handler: Handler
+    private lateinit var countDownTimer:CountDownTimer
     private var isChallengeStart = false
 
     override fun onCreateView(
@@ -84,6 +85,16 @@ class MainFragment : Fragment() {
             val action = MainFragmentDirections.actionMainFragmentToResultsFragment()
             view.findNavController().navigate(action)
         }
+
+        countDownTimer = object: CountDownTimer(4000, 1) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.progressWordCountDown.progress = (millisUntilFinished).toInt()
+            }
+
+            override fun onFinish() {
+                binding.progressWordCountDown.progress = 0
+            }
+        }
     }
 
     private fun startChallenge(){
@@ -108,16 +119,7 @@ class MainFragment : Fragment() {
         handler.post(runnable)
     }
     private fun startCountDown(){
-        val timer = object: CountDownTimer(4000, 1) {
-            override fun onTick(millisUntilFinished: Long) {
-                binding.progressWordCountDown.progress = (millisUntilFinished).toInt()
-            }
-
-            override fun onFinish() {
-                binding.progressWordCountDown.progress = 0
-            }
-        }
-        timer.start()
+        countDownTimer.start()
     }
     private fun stopChallenge(){
         isChallengeStart=false
