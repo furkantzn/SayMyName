@@ -96,7 +96,11 @@ class ResultsFragment : Fragment(){
             }
             btnYes.setOnClickListener {
                 runBlocking {
-                    viewModel.deleteWord(word)
+                    if(word.learnStatus==false){
+                        viewModel.updateWord(Word(word.id,word.name,true))
+                    }else{
+                        viewModel.deleteWord(word)
+                    }
                 }
                 if(adapterType == AdapterType.LearnedAdapter){
                     learnedWordAdapter.removeWordFromList(position)
@@ -125,7 +129,7 @@ class ResultsFragment : Fragment(){
     ) : CustomViewHolderListener {
         override fun onWordItemClicked(word: Word,position:Int) {
             fragment.showDeleteWordDialog(
-                "Do you want to delete ${word.name} from Learned list.",
+                "Do you want to delete ${word.name} from Learned list?",
                 word,
                 context,
                 position,
@@ -140,7 +144,7 @@ class ResultsFragment : Fragment(){
     ) : CustomViewHolderListener {
         override fun onWordItemClicked(word: Word,position: Int) {
             fragment.showDeleteWordDialog(
-                "Do you want to delete ${word.name} from Later Learn list.",
+                "Did you learn ${word.name} ?",
                 word,
                 context,
                 position,

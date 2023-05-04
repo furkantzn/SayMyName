@@ -16,6 +16,9 @@ class ResultsViewModel:ViewModel() {
         return wordDao.getLaterLearnWords()
     }
 
+    suspend fun updateWord(word: Word){
+        wordDao.updateWord(word)
+    }
     suspend fun deleteWord(word: Word){
         wordDao.deleteWord(word)
     }
