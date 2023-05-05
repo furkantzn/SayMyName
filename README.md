@@ -4,10 +4,10 @@
 
 ### ScreenShots
 
-![Main Page 1](screenshots/main_page_1.png)
+<img src="screenshots/main_page_1.png" width="250" height="350">
 
-![Main Page 2](screenshots/main_page_2.png)
+<img src="screenshots/main_page_2.png" width="250" height="350">
 
-![Result Page 1](screenshots/result_page_1.png)
+<img src="screenshots/result_page_1.png" width="250" height="350">
 
-![Result Page 2](screenshots/result_page_2.png)
+<img src="screenshots/result_page_2.png" width="250" height="350">
