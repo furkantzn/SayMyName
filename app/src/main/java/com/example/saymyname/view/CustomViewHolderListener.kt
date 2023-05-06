@@ -1,4 +1,4 @@
-package com.example.saymyname
+package com.example.saymyname.view
 
 import com.example.saymyname.model.Word
 

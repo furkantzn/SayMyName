@@ -1,26 +1,24 @@
-package com.example.saymyname
+package com.example.saymyname.view
 
-import android.content.res.Resources
-import android.opengl.Visibility
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.constraintlayout.motion.utils.ViewState
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
+import com.example.saymyname.view.MainFragmentDirections
+import com.example.saymyname.viewmodel.MainViewModel
+import com.example.saymyname.R
 import com.example.saymyname.databinding.FragmentMainBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.ResourceBundle
 
 class MainFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
@@ -52,8 +50,8 @@ class MainFragment : Fragment() {
     private fun loadJsonData(){
         this.context?.let {
             viewModel.loadJson(it)
-            runBlocking {
-                viewModel.createDB(it.applicationContext)
+                viewModel.viewModelScope.launch{
+                    viewModel.createDB(it.applicationContext)
             }
         }
     }
@@ -108,8 +106,8 @@ class MainFragment : Fragment() {
 
         runnable = object : Runnable {
             override fun run(){
-                runBlocking {
-                    binding.tvWord.text = viewModel.getWord()
+                    viewModel.viewModelScope.launch{
+                        binding.tvWord.text = viewModel.getWord()
                 }
                 runAnimation()
                 startCountDown()

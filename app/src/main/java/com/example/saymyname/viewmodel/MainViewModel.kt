@@ -1,17 +1,15 @@
-package com.example.saymyname
+package com.example.saymyname.viewmodel
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.example.saymyname.model.AppDatabase
+import com.example.saymyname.model.DatabaseManager
 import com.example.saymyname.model.Word
 import com.example.saymyname.model.WordDao
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
-import java.io.IOException
 import java.util.UUID
 
 class MainViewModel : ViewModel() {

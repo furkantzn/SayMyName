@@ -1,7 +1,7 @@
-package com.example.saymyname
+package com.example.saymyname.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.saymyname.model.AppDatabase
+import com.example.saymyname.model.DatabaseManager
 import com.example.saymyname.model.Word
 import com.example.saymyname.model.WordDao
 

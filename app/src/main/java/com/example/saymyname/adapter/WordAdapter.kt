@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.saymyname.CustomViewHolderListener
+import com.example.saymyname.view.CustomViewHolderListener
 import com.example.saymyname.R
 import com.example.saymyname.model.Word
 
-class WordAdapter (private val words: MutableList<Word>,private val listener:CustomViewHolderListener) :
+class WordAdapter (private val words: MutableList<Word>,private val listener: CustomViewHolderListener) :
     RecyclerView.Adapter<WordAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView

@@ -1,9 +1,7 @@
-package com.example.saymyname
+package com.example.saymyname.model
 
 import android.content.Context
 import androidx.room.Room
-import com.example.saymyname.model.AppDatabase
-import com.example.saymyname.model.WordDao
 
 object DatabaseManager {
     private lateinit var database: AppDatabase

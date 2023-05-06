@@ -1,4 +1,4 @@
-package com.example.saymyname
+package com.example.saymyname.view
 
 import android.app.Dialog
 import android.content.Context
@@ -13,13 +13,16 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.saymyname.R
+import com.example.saymyname.viewmodel.ResultsViewModel
 import com.example.saymyname.adapter.WordAdapter
 import com.example.saymyname.databinding.FragmentResultsBinding
 import com.example.saymyname.model.Word
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ResultsFragment : Fragment(){
+class ResultsFragment : Fragment() {
     private lateinit var viewModel: ResultsViewModel
     private lateinit var binding: FragmentResultsBinding
     private var learnedWords: MutableList<Word> = mutableListOf()
@@ -46,20 +49,25 @@ class ResultsFragment : Fragment(){
         setViewElements()
     }
 
-    private fun setViewModel(){
+    private fun setViewModel() {
         viewModel = ViewModelProvider(this)[ResultsViewModel::class.java]
     }
 
-    private fun setWordLists(){
+    private fun setWordLists() {
         runBlocking {
-            laterLearnedWords = viewModel.getLaterLearnWords()
-            learnedWords = viewModel.getLearnedWords()
+            launch(Dispatchers.IO) {
+                laterLearnedWords = viewModel.getLaterLearnWords()
+                learnedWords = viewModel.getLearnedWords()
+            }
         }
     }
 
-    private fun setViewElements(){
-        learnedWordAdapter = WordAdapter(learnedWords,LearnedWordsClickListener(context,this))
-        laterLearnAdapter = WordAdapter(laterLearnedWords,LaterLearnWordsClickListener(context,this))
+    private fun setViewElements() {
+        learnedWordAdapter = WordAdapter(learnedWords, LearnedWordsClickListener(context, this))
+        laterLearnAdapter = WordAdapter(
+            laterLearnedWords,
+            LaterLearnWordsClickListener(context, this)
+        )
 
         binding.recyclerLearnLater.layoutManager = GridLayoutManager(context, 2)
         binding.recyclerLearned.layoutManager = GridLayoutManager(context, 2)
@@ -81,7 +89,13 @@ class ResultsFragment : Fragment(){
         }
     }
 
-    private fun showDeleteWordDialog(title: String, word: Word, context: Context?,position: Int,adapterType: AdapterType) {
+    private fun showDeleteWordDialog(
+        title: String,
+        word: Word,
+        context: Context?,
+        position: Int,
+        adapterType: AdapterType
+    ) {
         if (context != null) {
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -95,21 +109,21 @@ class ResultsFragment : Fragment(){
                 dialog.dismiss()
             }
             btnYes.setOnClickListener {
-                runBlocking {
-                    if(word.learnStatus==false){
-                        viewModel.updateWord(Word(word.id,word.name,true))
-                    }else{
+                viewModel.viewModelScope.launch {
+                    if (word.learnStatus == false) {
+                        viewModel.updateWord(Word(word.id, word.name, true))
+                    } else {
                         viewModel.deleteWord(word)
                     }
                 }
-                if(adapterType == AdapterType.LearnedAdapter){
+                if (adapterType == AdapterType.LearnedAdapter) {
                     learnedWordAdapter.removeWordFromList(position)
                     binding.tvLearned.text = buildString {
                         append("Learned(")
                         append(learnedWordAdapter.itemCount.toString())
                         append(")")
                     }
-                }else if(adapterType == AdapterType.LaterLearnAdapter){
+                } else if (adapterType == AdapterType.LaterLearnAdapter) {
                     laterLearnAdapter.removeWordFromList(position)
                     binding.tvLearnLater.text = buildString {
                         append("Learn Later(")
@@ -127,7 +141,7 @@ class ResultsFragment : Fragment(){
         private var context: Context?,
         private var fragment: ResultsFragment
     ) : CustomViewHolderListener {
-        override fun onWordItemClicked(word: Word,position:Int) {
+        override fun onWordItemClicked(word: Word, position: Int) {
             fragment.showDeleteWordDialog(
                 "Do you want to delete ${word.name} from Learned list?",
                 word,
@@ -142,7 +156,7 @@ class ResultsFragment : Fragment(){
         private var context: Context?,
         private var fragment: ResultsFragment
     ) : CustomViewHolderListener {
-        override fun onWordItemClicked(word: Word,position: Int) {
+        override fun onWordItemClicked(word: Word, position: Int) {
             fragment.showDeleteWordDialog(
                 "Did you learn ${word.name} ?",
                 word,
@@ -153,7 +167,7 @@ class ResultsFragment : Fragment(){
         }
     }
 
-    enum class AdapterType{
+    enum class AdapterType {
         LearnedAdapter,
         LaterLearnAdapter
     }
